@@ -27,22 +27,6 @@ func (r *Room) InitRoom() {
 	}
 }
 
-func (r *Room) North() MazeElement {
-	return r.side[North]
-}
-
-func (r *Room) East() MazeElement {
-	return r.side[East]
-}
-
-func (r *Room) South() MazeElement {
-	return r.side[South]
-}
-
-func (r *Room) West() MazeElement {
-	return r.side[West]
-}
-
 func (r *Room) SetElement(el MazeElement, side Side) {
 	r.side[side] = el
 }
