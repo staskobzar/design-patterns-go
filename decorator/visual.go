@@ -6,24 +6,6 @@ type Decorator interface {
 	Draw()
 }
 
-type Window struct {
-	draw      string
-	component Decorator
-}
-
-func (w *Window) Draw() {
-	fmt.Println(w.draw)
-}
-
-func (w *Window) SetComponent(c Decorator) {
-	w.Draw()
-	c.Draw()
-}
-
-func NewWindow() *Window {
-	return &Window{draw: "Draw Window"}
-}
-
 type VisualComponent struct {
 	draw      string
 	component Decorator
@@ -34,9 +16,20 @@ func (c *VisualComponent) Draw() {
 	c.component.Draw()
 }
 
-type BorderDecorator struct {
-	VisualComponent
+type Window struct{ VisualComponent }
+
+func (w *Window) SetComponent(c Decorator) {
+	w.component = c
+	w.Draw()
 }
+
+func NewWindow() *Window {
+	win := &Window{}
+	win.draw = "Draw Window"
+	return win
+}
+
+type BorderDecorator struct{ VisualComponent }
 
 func NewBorderDecorator(c Decorator, width int) Decorator {
 	return &BorderDecorator{
@@ -47,9 +40,7 @@ func NewBorderDecorator(c Decorator, width int) Decorator {
 	}
 }
 
-type ScrollDecorator struct {
-	VisualComponent
-}
+type ScrollDecorator struct{ VisualComponent }
 
 func NewScrollDecorator(c Decorator) Decorator {
 	return &ScrollDecorator{
