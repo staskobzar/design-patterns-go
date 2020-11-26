@@ -12,8 +12,9 @@ func TestEquipmentComposite(t *testing.T) {
 
 	cabinet.Add(chassis)
 
-	bus := NewBus("MCA Bus")             // price $32.40, discount $4.10, W12
-	bus.Add(NewCard("16Mbs Token Ring")) // price $26.83, discount $3.11, W14
+	bus := NewBus("MCA Bus")            // price $32.40, discount $4.10, W12
+	card := NewCard("16Mbs Token Ring") // price $26.83, discount $3.11, W14
+	bus.Add(card)
 
 	chassis.Add(bus)
 	chassis.Add(NewFloppyDisk("3.5in Floppy")) // price $2.68, discount $0.43, W10
@@ -21,5 +22,6 @@ func TestEquipmentComposite(t *testing.T) {
 	assert.EqualValues(t, 86.91, cabinet.NetPrice())
 	assert.EqualValues(t, 9.14, cabinet.Discount())
 	assert.EqualValues(t, 56, cabinet.Power())
+	assert.Equal(t, "$23.72", card.Price())
 	assert.Equal(t, "$77.77", cabinet.Price())
 }

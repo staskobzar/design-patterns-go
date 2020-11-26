@@ -45,30 +45,33 @@ func (c *Composite) Add(item Equipment) {
 	c.list = append(c.list, item)
 }
 
-func (c *Composite) NetPrice() Price {
-	var total Price
+func (c *Composite) listEach(f func(e Equipment)) {
 	for i := 0; i < len(c.list); i++ {
-		total += c.list[i].NetPrice()
+		f(c.list[i])
 	}
-	total += c.price
+}
+
+func (c *Composite) NetPrice() Price {
+	total := c.price
+	c.listEach(func(e Equipment) {
+		total += e.NetPrice()
+	})
 	return Price(math.Round(float64(total*100)) / 100)
 }
 
 func (c *Composite) Discount() Price {
-	var total Price
-	for i := 0; i < len(c.list); i++ {
-		total += c.list[i].Discount()
-	}
-	total += c.discount
+	total := c.discount
+	c.listEach(func(e Equipment) {
+		total += e.Discount()
+	})
 	return Price(math.Round(float64(total*100)) / 100)
 }
 
 func (c *Composite) Power() Watt {
-	var total Watt
-	for i := 0; i < len(c.list); i++ {
-		total += c.list[i].Power()
-	}
-	total += c.power
+	total := c.power
+	c.listEach(func(e Equipment) {
+		total += e.Power()
+	})
 	return total
 }
 
