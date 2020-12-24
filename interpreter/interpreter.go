@@ -86,8 +86,7 @@ func (e Expr) Evaluate() bool {
 		return e.left.Evaluate() && e.right.Evaluate()
 	case OpOR:
 		return e.left.Evaluate() || e.right.Evaluate()
-	case OpNOT:
+	default:
 		return !e.left.Evaluate()
 	}
-	return false
 }
