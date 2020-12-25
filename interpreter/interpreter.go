@@ -56,37 +56,35 @@ func (c Constant) Evaluate() bool {
 
 type Operator uint8
 
-const (
-	OpAND = iota + 100
-	OpOR
-	OpNOT
-)
+type evalFunc func(l, r BooleanExp) bool
 
 type Expr struct {
 	left  BooleanExp
 	right BooleanExp
-	op    Operator
+	eval  evalFunc
 }
 
 func NewAndExp(left, right BooleanExp) BooleanExp {
-	return &Expr{left, right, OpAND}
+	eval := func(l, r BooleanExp) bool {
+		return l.Evaluate() && r.Evaluate()
+	}
+	return &Expr{left, right, eval}
 }
 
 func NewOrExp(left, right BooleanExp) BooleanExp {
-	return &Expr{left, right, OpOR}
+	eval := func(l, r BooleanExp) bool {
+		return l.Evaluate() || r.Evaluate()
+	}
+	return &Expr{left, right, eval}
 }
 
 func NewNotExp(op BooleanExp) BooleanExp {
-	return &Expr{op, nil, OpNOT}
+	eval := func(l, r BooleanExp) bool {
+		return !l.Evaluate()
+	}
+	return &Expr{op, nil, eval}
 }
 
 func (e Expr) Evaluate() bool {
-	switch e.op {
-	case OpAND:
-		return e.left.Evaluate() && e.right.Evaluate()
-	case OpOR:
-		return e.left.Evaluate() || e.right.Evaluate()
-	default:
-		return !e.left.Evaluate()
-	}
+	return e.eval(e.left, e.right)
 }
