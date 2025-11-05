@@ -4,21 +4,21 @@ import "log"
 
 type SupportHandler interface {
 	handleRequest(*SupportIssue)
-} 
+}
 
 type SupportIssue struct {
-	title string
+	title      string
 	complexity int
 }
 
-func NewIssue(title string, complexity int) *SupportIssue{
+func NewIssue(title string, complexity int) *SupportIssue {
 	return &SupportIssue{title: title, complexity: complexity}
 }
 
 type AbstractSupportHandler struct {
-	next SupportHandler
+	next      SupportHandler
 	canHandle func(*SupportIssue) bool
-	doHandle func(*SupportIssue)
+	doHandle  func(*SupportIssue)
 }
 
 func (ash *AbstractSupportHandler) handleRequest(issue *SupportIssue) {
@@ -27,8 +27,8 @@ func (ash *AbstractSupportHandler) handleRequest(issue *SupportIssue) {
 		return
 	}
 
-	if ash.next != nil{
-		log.Printf("[W] can't handle (complexity = %d)",issue.complexity)
+	if ash.next != nil {
+		log.Printf("[W] can't handle (complexity = %d)", issue.complexity)
 		ash.next.handleRequest(issue)
 	} else {
 		log.Printf("[E] Issue %q can not be handled by anyone in the chain", issue.title)
@@ -40,30 +40,31 @@ type Tier1Support struct {
 	AbstractSupportHandler
 }
 
-func CreateTier1Support(next SupportHandler) *Tier1Support{
+func CreateTier1Support(next SupportHandler) *Tier1Support {
 	s := &Tier1Support{}
 	s.next = next
-	s.canHandle = func(issue *SupportIssue) bool{
+	s.canHandle = func(issue *SupportIssue) bool {
 		return issue.complexity <= 1
 	}
 	s.doHandle = func(issue *SupportIssue) {
-		log.Printf("Tier1Support: Resolved issue %q",issue.title)
+		log.Printf("Tier1Support: Resolved issue %q", issue.title)
 	}
 
 	return s
 }
+
 type Tier2Support struct {
 	AbstractSupportHandler
 }
 
-func CreateTier2Support(next SupportHandler) *Tier2Support{
+func CreateTier2Support(next SupportHandler) *Tier2Support {
 	s := &Tier2Support{}
 	s.next = next
-	s.canHandle = func(issue *SupportIssue) bool{
+	s.canHandle = func(issue *SupportIssue) bool {
 		return issue.complexity <= 2
 	}
 	s.doHandle = func(issue *SupportIssue) {
-		log.Printf("Tier2Support: Resolved issue %q",issue.title)
+		log.Printf("Tier2Support: Resolved issue %q", issue.title)
 	}
 
 	return s
@@ -73,14 +74,14 @@ type Tier3Support struct {
 	AbstractSupportHandler
 }
 
-func CreateTier3Support(next SupportHandler) *Tier3Support{
+func CreateTier3Support(next SupportHandler) *Tier3Support {
 	s := &Tier3Support{}
 	s.next = next
-	s.canHandle = func(issue *SupportIssue) bool{
+	s.canHandle = func(issue *SupportIssue) bool {
 		return issue.complexity <= 3
 	}
 	s.doHandle = func(issue *SupportIssue) {
-		log.Printf("Tier3Support: Resolved issue %q",issue.title)
+		log.Printf("Tier3Support: Resolved issue %q", issue.title)
 	}
 
 	return s

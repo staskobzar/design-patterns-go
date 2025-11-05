@@ -5,53 +5,53 @@ import (
 	"strings"
 )
 
-type Task interface{
+type Task interface {
 	getName() string
 	getTimeEstimate() int
 	printTask(indent int)
 }
 
-type SimpleTask struct{
+type SimpleTask struct {
 	name string
 	time int
 }
 
-func NewSimpleTask(name string, time int) *SimpleTask{
-	return &SimpleTask{name: name,time: time}
+func NewSimpleTask(name string, time int) *SimpleTask {
+	return &SimpleTask{name: name, time: time}
 }
 
-func(t*SimpleTask) getName() string {return t.name}
-func(t*SimpleTask) getTimeEstimate() int {return t.time}
-func(t*SimpleTask) printTask(indent int) {
-	fmt.Printf("%s- task %q (%d h)\n",strings.Repeat(" ", indent), t.name, t.time)
+func (t *SimpleTask) getName() string      { return t.name }
+func (t *SimpleTask) getTimeEstimate() int { return t.time }
+func (t *SimpleTask) printTask(indent int) {
+	fmt.Printf("%s- task %q (%d h)\n", strings.Repeat(" ", indent), t.name, t.time)
 }
 
 type TaskGroup struct {
-	name string
+	name  string
 	tasks []Task
 }
 
-func NewTaskGroup(name string) *TaskGroup{
-	return &TaskGroup{name: name, tasks: make([]Task,0)}
+func NewTaskGroup(name string) *TaskGroup {
+	return &TaskGroup{name: name, tasks: make([]Task, 0)}
 }
 
-func (g*TaskGroup)getTimeEstimate() int {
+func (g *TaskGroup) getTimeEstimate() int {
 	sum := 0
-	for _,t:=range g.tasks{
+	for _, t := range g.tasks {
 		sum += t.getTimeEstimate()
 	}
 	return sum
 }
 
-func (g*TaskGroup)addTask(t Task) {
+func (g *TaskGroup) addTask(t Task) {
 	g.tasks = append(g.tasks, t)
 }
 
-func (g*TaskGroup)getName() string {return g.name}
+func (g *TaskGroup) getName() string { return g.name }
 
-func (g*TaskGroup)printTask(indent int) {
+func (g *TaskGroup) printTask(indent int) {
 	fmt.Printf("%s* %s: total time %dh\n", strings.Repeat(" ", indent), g.getName(), g.getTimeEstimate())
-	for _,t:=range g.tasks{
+	for _, t := range g.tasks {
 		t.printTask(indent + 1)
 	}
 }
